@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Simple Quiz</title>
+    <style>
+    body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    margin: 50px;
+    background: linear-gradient(100deg, #2980b9, #8e44ad);
+}
+
+#quiz-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: rgba(7, 115, 186, 0.367);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.option {
+    cursor: pointer;
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: rgba(128, 5, 172, 0.37);
+    transition: background-color 0.3s ease-in-out;
+}
+
+.option:hover {
+    background-color: rgba(160, 43, 189, 0.641);
+}
+#restart-button,
+#next-button {
+    background-color: #45a049;
+    color: #fff;
+    display: block;
+    margin: 20px auto; /* Menempatkan tombol di tengah secara horizontal */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+#restart-button:hover,
+#home-button:hover {
+    filter: brightness(90%); /* Memberikan efek kegelapan saat dihover */
+}
+
+#restar-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateX(-200%);
+}
+#next-button:hover, #restart-button:hover {
+    background-color: #45a049;
+}
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <h2 id="question"></h2>
+        <div id="options-container" class="option"></div>
+        <button id="next-button">Next</button>
+    </div>
+
+    <!-- Tambahkan tombol restart -->
+    <button id="restart-button" style="display: none;">Ulangi Quiz</button>
+
+    <script>
+        const quizData = [
+    {
+        question: 'Apa ibu kota Indonesia?',
+        options: ['Jakarta', 'Bandung', 'Surabaya', 'Semarang'],
+        correctAnswer: 'Jakarta'
+    },
+    {
+        question: 'Berapa jumlah planet di tata surya kita?',
+        options: ['7', '8', '9', '10'],
+        correctAnswer: '8'
+    },
+    {
+        question: 'Apa warna langit pada siang hari?',
+        options: ['Merah', 'Biru', 'Hijau', 'Kuning'],
+        correctAnswer: 'Biru'
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const restartButton = document.getElementById('restart-button');
+const questionElement = document.getElementById('question');
+const optionsContainer = document.getElementById('options-container');
+const nextButton = document.getElementById('next-button');
+
+function loadQuestion() {
+    const currentQuizData = quizData[currentQuestion];
+
+    questionElement.textContent = currentQuizData.question;
+    optionsContainer.innerHTML = '';
+
+    currentQuizData.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'option';
+        optionElement.textContent = option;
+        optionElement.addEventListener('click', () => checkAnswer(index));
+        optionsContainer.appendChild(optionElement);
+    });
+}
+
+function checkAnswer(selectedIndex) {
+    const currentQuizData = quizData[currentQuestion];
+
+    if (currentQuizData.options[selectedIndex] === currentQuizData.correctAnswer) {
+        score++;
+    }
+
+    if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+    } else {
+        endQuiz();
+    }
+}
+
+function restartQuiz() {
+    currentQuestion = 0;
+    score = 0;
+    loadQuestion();
+    restartButton.style.display = 'none';
+    nextButton.style.display = 'block';
+}
+
+restartButton.addEventListener('click', restartQuiz);
+
+
+function endQuiz() {
+    questionElement.textContent = `Skor Anda: ${score} dari ${quizData.length}`;
+    optionsContainer.innerHTML = '';
+    nextButton.style.display = 'none';
+    restartButton.style.display = 'block';
+}
+
+nextButton.addEventListener('click', () => {
+    if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+    } else {
+        endQuiz();
+    }
+});
+
+// Load the first question
+loadQuestion();
+
+    </script>
+</body>
+</html>
